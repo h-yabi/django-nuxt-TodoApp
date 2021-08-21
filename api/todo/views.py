@@ -3,5 +3,5 @@ from .serializers import TodoSerializer
 from .models import TodoModel
 
 class TodoViewSet(viewsets.ModelViewSet):
-  serializer_sample = TodoSerializer
+  serializer_class = TodoSerializer
   queryset = TodoModel.objects.all()
