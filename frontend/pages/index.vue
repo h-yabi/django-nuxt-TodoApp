@@ -2,12 +2,17 @@
   <div class="container contai my-5">
       <h1 class="title">TodoList</h1>
       <ul class="todo-list">
-        <li v-for="todo in getData" :key="todo.id">
-          <div  class="todo-image">
-            <img v-if="todo.picture" :src="todo.picture" :alt="todo.title">
-            <img v-else src="https://placehold.jp/150x150.png" :alt="todo.title">
+        <li v-for="todo in data" :key="todo.id" class="justify-content-between">
+          <div class="d-flex align-items-center">
+            <div  class="todo-image">
+              <img v-if="todo.picture" :src="todo.picture" :alt="todo.title">
+              <img v-else src="https://placehold.jp/150x150.png" :alt="todo.title">
+            </div>
+            {{todo.title}}
           </div>
-          {{todo.title}}
+          <button @click="onDelete(todo.id)" class="btn btn-sm btn-danger">
+            削除
+          </button>
         </li>
       </ul>
   </div>
@@ -28,9 +33,23 @@ export default Vue.extend({
       console.log(error)
     }
   },
-  computed: {
-    getData() {
-      return this.$data.todoData
+  data() {
+    return {
+      data: ''
+    }
+  },
+  mounted() {
+    this.data =this.$data.todoData
+  },
+  methods: {
+    async onDelete(id) {
+      try {
+        await this.$axios.$delete(`/todo/${id}/`)
+        const newData = await this.$axios.$get('/todo/')
+        this.data = newData
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 })
